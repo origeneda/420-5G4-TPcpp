@@ -52,7 +52,7 @@ string Book::toString() const {
 // méthode toFileFormat
 string Book::toFileFormat() const {
     string availability = isAvailable ? "1" : "0";
-    string result = title + "," + author + "," + isbn + "," + availability + "," + borrowerId;
+    string result = title + "|" + author + "|" + isbn + "|" + availability + "|" + borrowerId;
     return result;
 }
 
@@ -60,10 +60,10 @@ string Book::toFileFormat() const {
 void Book::fromFileFormat(const string& line) {
     stringstream ss(line);
     string availability;
-    getline(ss, title, ',');
-    getline(ss, author, ',');
-    getline(ss, isbn, ',');
-    getline(ss, availability, ',');
+    getline(ss, title, '|');
+    getline(ss, author, '|');
+    getline(ss, isbn, '|');
+    getline(ss, availability, '|');
     isAvailable = (availability == "1");
-    getline(ss, borrowerId, ',');
+    getline(ss, borrowerId, '|');
 }
