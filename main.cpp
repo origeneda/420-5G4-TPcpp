@@ -180,24 +180,33 @@ int main(int argc, char* argv[]) {
             case 7: { // Add User
                 string name = getInput("Entrez le nom de l'utilisateur : ");
 
-                int nbUser = library.getAllUsers().size()+1;
-                string userIdNUm;
-                if (nbUser < 10){
-                    userIdNUm = "00" + to_string(nbUser);
-                }else if (nbUser < 100){
-                    userIdNUm = "0" + to_string(nbUser);
-                }else{
-                    userIdNUm = to_string(nbUser);
+                int maxNumero = 0;
+
+                for (const auto& user : library.getAllUsers()) {
+                    string id = user->getUserId();
+
+                    // Garde que les ID au format "USR" + chiffres
+                    if (id.size() > 3 && id.substr(0, 3) == "USR") {
+                        try {
+                            int numero = stoi(id.substr(3));
+                            maxNumero = max(maxNumero, numero);
+                        } catch (const exception&) {
+                            // rien faire
+                        }
+                    }
                 }
 
-                string userId = "USR" + userIdNUm;
+                ostringstream oss;
+                oss << "USR" << setw(3) << setfill('0') << (maxNumero + 1);
+
+                string userId = oss.str();
 
                 if (library.findUserById(userId)) {
                     cout << "Erreur : Un utilisateur avec l'ID " << userId << " existe déjà.\n";
                 } else {
                     User newUser(name, userId);
                     library.addUser(newUser);
-                    cout << "Utilisateur ajouté avec succès !\n";
+                    cout << "Utilisateur ajouté avec succès ! ID : " << userId << "\n";
                 }
                 pauseForInput();
                 break;
