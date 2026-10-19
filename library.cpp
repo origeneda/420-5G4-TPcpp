@@ -153,10 +153,24 @@ void Library::displayAllBooks() {
         return;
     }
     
+
+    vector<Book*> allBooks = getAllBooks();
+
+    sort(allBooks.begin(), allBooks.end(),
+    [](Book* a, Book* b) {
+        if (a->getTitle() != b->getTitle()) {
+            return a->getTitle() < b->getTitle();
+        }
+
+        return a->getAuthor() < b->getAuthor();
+    });
+
+    
+    
     cout << "\n=== TOUS LES LIVRES ===\n";
-    for (size_t i = 0; i < books.size(); ++i) {
+    for (size_t i = 0; i < allBooks.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";
-        cout << books[i]->toString() << "\n";
+        cout << allBooks[i]->toString() << "\n";
         cout << "-------------------------\n";
     }
 }
