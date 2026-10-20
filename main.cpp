@@ -127,8 +127,13 @@ int main(int argc, char* argv[]) {
     vector<string> journal; // lignes du journal de la session, écrites à la sortie
     
     // Load existing data
+    if (!booksFile.empty() && !usersFile.empty()) {
         cout << "Chargement des données de la bibliothèque...\n";
         fileManager.loadLibraryData(library);
+    } else {
+        cout << "Aucun répertoire de données spécifié (--data-dir). Démarrage avec une bibliothèque vide.\n";
+        cout << "Attention : les données ne seront pas sauvegardées.\n";
+    }
     
     int choice;
     bool running = true;
@@ -331,10 +336,15 @@ int main(int argc, char* argv[]) {
             }
             
             case 0: // Exit
+                if (!booksFile.empty() && !usersFile.empty()) {
                     cout << "Sauvegarde des données avant la fermeture...\n";
                     if (fileManager.saveLibraryData(library)) {
                         journal.push_back(makeLogLine("SAUVEGARDE", "Sauvegarde automatique à la sortie"));
                     }
+                } else {
+                    cout << "Aucun répertoire de données spécifié (--data-dir) : les données ne sont pas sauvegardées.\n";
+                }
+                // Enregistrement du journal de la session
                 saveJournal(logFile, journal);
                 cout << "Merci d'avoir utilisé le Système de Gestion de Bibliothèque Personnelle !\n";
                 running = false;
